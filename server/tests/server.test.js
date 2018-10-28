@@ -96,7 +96,7 @@ describe('GET /todos/:id', () => {
         .end(done);
     });
 
-    it('should return 404 for id not present in the db', (done) => {
+    it('should return 404 for invalid id', (done) => {
         request(app)
         .get('/todos/123')
         .expect(404)
