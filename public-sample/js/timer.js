@@ -1,69 +1,100 @@
-const hrs = document.getElementById('hrs');
-const mins = document.getElementById('mins');
-const sec = document.getElementById('sec');
+
+const start = document.getElementById('startime');
+const end = document.getElementById('endtime');
 const tim = document.getElementById('time');
 
 const num = 0;
 const zeroSec = num.toString();
 
+let startTime;
+let endTime;
+let startEnd;
+let total;
+
+let clock = `<span id="hrs">00</span>:<span id="mins">00</span>:<span id="sec">00</span>`;
+tim.innerHTML = clock;
+
+const hrs = document.getElementById('hrs');
+const mins = document.getElementById('mins');
+const sec = document.getElementById('sec');
+
+// if (start === undefined) {
+//     // start.innerText = null;
+//     document.getElementById('startime').style.display = "none";
+// } else {
+//     start.innerText = startTime;
+// }
+
+// if (end === undefined) {
+//     // end.innerText = null;
+//     document.getElementById('endtime').style.display = "none";
+// } else {
+//     end.innerText = endTime;
+// }
+
 $('#start').click(function () {
     
-    const time = moment().startOf('minute').format('mm');
-    console.log('time: ', time);
-    const hr = moment().startOf('hour').format('h:mm');
-    console.log('time: ', hr);
-    const before = moment().startOf('hour').subtract(time, 'minute').format('LTS');
-    console.log('hmmm: ', before);
-    const now = moment().format('LTS');
-    console.log('now: ', now);
+    // const time = moment().startOf('minute').format('mm');
+    // console.log('time: ', time);
+    // const hr = moment().startOf('hour').format('h:mm');
+    // console.log('time: ', hr);
+    // const before = moment().startOf('hour').subtract(time, 'minute').format('LTS');
+    // console.log('hmmm: ', before);
+    startTime = moment().format('HH:mm:ss A');
+    console.log('startTime: ', startTime);
 
-    timerValue = moment.utc(moment(now, "HH:mm:ss A").diff(moment(before, "HH:mm:ss A"))).format("HH:mm:ss A");
+    // timerValue = moment.utc(moment(now, "HH:mm:ss A").diff(moment(before, "HH:mm:ss A"))).format("HH:mm:ss A");
     timeOut();
 });
 
 function timeOut() {
-    const timerss = setInterval(() => {
-        // const sec = document.getElementById('sec');
-        // const hrs = document.getElementById('hrs');
-        // const mins = document.getElementById('mins');
+    const timerSet = setInterval(() => {
 
-        sec.innerText = parseInt(sec.innerText) + 10;
+        sec.innerText = parseInt(sec.innerText) + 1;
+
         if (sec.innerText < 10 || sec.innerText === 0) {
             sec.innerText = 0 + sec.innerText;
         }
-
         if (sec.innerText >= 60) {
             minutes(60);
         }
-
         if (mins.innerText >= 60) {
             hours(60);
         }
-        // while (parseInt(sec.innerText) >= 60) {
-        //     mins.innerText = parseInt(mins.innerText) + 1;
-        //     sec.innerText = 0;
-        // }
-        
-        // while (parseInt(mins.innerText) >= 60) {
-        //     hrs.innerText = parseInt(hrs.innerText) + 1;
-        //     mins.innerText = 0;
-        // }
 
-        // console.log(sec.innerText);
         $('#stop').click(function() {
-            clearInterval(timerss);
+            clearInterval(timerSet);
+            stopTime();
         });
     }, 1000);
-    return timerss;
+
+    return timerSet;
+}
+
+function stopTime() {
+    endTime = moment().format('HH:mm:ss A');
+    console.log('endTime: ', endTime);
+    start.innerText = startTime;
+    end.innerText = endTime;
+    totalTime(startTime, endTime);
+}
+
+function totalTime(start, end) {
+    startEnd = moment.utc(moment(end, "HH:mm:ss A").diff(moment(start, "HH:mm:ss A"))).format("HH:mm:ss");
+    // const total = moment.utc(moment(startEnd, "HH:mm:ss A").add(moment("00:00:01 A"))).format("HH:mm:ss A");
+    console.log('Total Time: ', startEnd);
+    tim.innerHTML = startEnd;
+    // console.log('startTime: ', startTime);
+    // console.log('endTime: ', endTime);
+    // console.log('Total Time: ', startEnd);
 }
 
 function minutes(data) {
     if (parseInt(sec.innerText) >= data) {
-        mins.innerText = parseInt(mins.innerText) + 10;
+        mins.innerText = parseInt(mins.innerText) + 1;
         if (mins.innerText < 10 || mins.innerText === 0) {
             mins.innerText = 0 + mins.innerText;
         }
-        console.log(zeroSec);
         sec.innerText = zeroSec + 0;
     }
 }
@@ -77,7 +108,3 @@ function hours(data) {
         mins.innerText = zeroSec + 0;
     }
 }
-
-// $('#stop').click(function() {
-//     clearInterval(timeOut());
-// });
