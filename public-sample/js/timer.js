@@ -35,7 +35,7 @@ const sec = document.getElementById('sec');
 
 $('#start').click(function () {
     // timeOut();
-    startTime = moment().format('LT');
+    startTime = moment().format('HH:mm:ss');
     console.log('startTime: ', startTime);
     const timerSet = setInterval(() => {
 
@@ -43,14 +43,17 @@ $('#start').click(function () {
         // counter = counter + 1;
         // console.log(counter);
 
+        const nowTime = moment().format('HH:mm:ss a');
+        console.log(nowTime);
+
         if (sec.innerText < 10 || sec.innerText === 0) {
             sec.innerText = 0 + sec.innerText;
         }
-        if (sec.innerText >= 59) {
-            minutes(59);
+        if (sec.innerText >= 58) {
+            minutes(58);
         }
-        if (mins.innerText >= 59) {
-            hours(59);
+        if (mins.innerText >= 58) {
+            hours(58);
         }
 
         $('#stop').click(function () {
@@ -71,15 +74,44 @@ $('#start').click(function () {
 });
 
 function stopTime() {
-    endTime = moment().format('LT');
-    console.log('endTime: ', endTime);
-    start.innerText = startTime;
-    end.innerText = endTime;
+    // endTime = moment().format('HH:mm:ss a');
+    // console.log('endTime: ', endTime);
+    
+    // const tickInt = parseInt(ticking);
+    // const ticker = moment.duration(tickInt).milliseconds();
+    // console.log('Tick: ', tick);
+    // console.log('Real: ', moment.utc(ticker).format("HH:mm:ss"));
+    // const ending = moment(moment(ticking, "hmmss")).format("HH:mm:ss");
+    // console.log(ending);
+    const tick = startTime;
+    console.log("Starting Time: ", tick);
+
+    const ticking = hrs.innerText + '' + mins.innerText + '' + sec.innerText;
+    const real = moment(ticking, "hmmss").format('HH:mm:ss');
+    console.log('Clock Timer: ', real);
+
+    const durations = [
+        tick,
+        real
+    ]
+
+    const totalDurations = durations.slice(1).reduce((prev, cur) => moment.duration(cur).add(prev), moment.duration(durations[0]));
+    console.log(`Total time is: ${moment.utc(totalDurations.asMilliseconds()).format("HH:mm:ss A")}`);
+    console.log(typeof tick, tick);
+    console.log(typeof real, real);
+    // const realDeal = moment(moment(startTime, "HH:mm:ss a").add(moment(real, "HH:mm:ss a"))).format('HH:mm:ss a');
+    // const realDeal = moment({hour: parseInt(hrs.innerText), minute: parseInt(mins.innerText), seconds: parseInt(sec.innerText)}, "hh:mm:ss");
+    // console.log("Real: ", realDeal);
+
+    start.innerText = moment.utc(startTime, "HH:mm:ss A").format("HH:mm:ss A");
+    end.innerText = moment.utc(totalDurations.asMilliseconds()).format("HH:mm:ss A");
+    // end.innerText = moment.utc(moment(startTime, "HH:mm:ss a").add(tick, "HH:mm:ss")).format('HH:mm:ss a');
+    // end.innerText = endTime;
     // totalTime(startTime, endTime);// To find the total time
 }
 
 function totalTime(start, end) {
-    startEnd = moment.utc(moment(end, "LT").diff(moment(start, "LT"))).format("LT");
+    startEnd = moment.utc(moment(end, "HH:mm:ss a").diff(moment(start, "HH:mm:ss a"))).format("HH:mm:ss");
     console.log('Total Time: ', startEnd);
 }
 
