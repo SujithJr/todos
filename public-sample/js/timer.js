@@ -10,6 +10,7 @@ let startTime;
 let endTime;
 let startEnd;
 let total;
+let counter = 0;
 
 let clock = `<span id="hrs">00</span>:<span id="mins">00</span>:<span id="sec">00</span>`;
 tim.innerHTML = clock;
@@ -33,60 +34,53 @@ const sec = document.getElementById('sec');
 // }
 
 $('#start').click(function () {
-    
+    // timeOut();
+    startTime = moment().format('LT');
+    console.log('startTime: ', startTime);
+    const timerSet = setInterval(() => {
+
+        sec.innerText = parseInt(sec.innerText) + 1;
+        // counter = counter + 1;
+        // console.log(counter);
+
+        if (sec.innerText < 10 || sec.innerText === 0) {
+            sec.innerText = 0 + sec.innerText;
+        }
+        if (sec.innerText >= 59) {
+            minutes(59);
+        }
+        if (mins.innerText >= 59) {
+            hours(59);
+        }
+
+        $('#stop').click(function () {
+            clearInterval(timerSet);
+            stopTime();
+        });
+    }, 1000);
     // const time = moment().startOf('minute').format('mm');
     // console.log('time: ', time);
     // const hr = moment().startOf('hour').format('h:mm');
     // console.log('time: ', hr);
     // const before = moment().startOf('hour').subtract(time, 'minute').format('LTS');
     // console.log('hmmm: ', before);
-    startTime = moment().format('HH:mm:ss A');
-    console.log('startTime: ', startTime);
+    
 
     // timerValue = moment.utc(moment(now, "HH:mm:ss A").diff(moment(before, "HH:mm:ss A"))).format("HH:mm:ss A");
-    timeOut();
+    
 });
 
-function timeOut() {
-    const timerSet = setInterval(() => {
-
-        sec.innerText = parseInt(sec.innerText) + 1;
-
-        if (sec.innerText < 10 || sec.innerText === 0) {
-            sec.innerText = 0 + sec.innerText;
-        }
-        if (sec.innerText >= 60) {
-            minutes(60);
-        }
-        if (mins.innerText >= 60) {
-            hours(60);
-        }
-
-        $('#stop').click(function() {
-            clearInterval(timerSet);
-            stopTime();
-        });
-    }, 1000);
-
-    return timerSet;
-}
-
 function stopTime() {
-    endTime = moment().format('HH:mm:ss A');
+    endTime = moment().format('LT');
     console.log('endTime: ', endTime);
     start.innerText = startTime;
     end.innerText = endTime;
-    totalTime(startTime, endTime);
+    // totalTime(startTime, endTime);// To find the total time
 }
 
 function totalTime(start, end) {
-    startEnd = moment.utc(moment(end, "HH:mm:ss A").diff(moment(start, "HH:mm:ss A"))).format("HH:mm:ss");
-    // const total = moment.utc(moment(startEnd, "HH:mm:ss A").add(moment("00:00:01 A"))).format("HH:mm:ss A");
+    startEnd = moment.utc(moment(end, "LT").diff(moment(start, "LT"))).format("LT");
     console.log('Total Time: ', startEnd);
-    tim.innerHTML = startEnd;
-    // console.log('startTime: ', startTime);
-    // console.log('endTime: ', endTime);
-    // console.log('Total Time: ', startEnd);
 }
 
 function minutes(data) {
@@ -105,6 +99,7 @@ function hours(data) {
         if (hrs.innerText < 10 || hrs.innerText === 0) {
             hrs.innerText = 0 + hrs.innerText;
         }
+        // mins.innerText = 0;
         mins.innerText = zeroSec + 0;
     }
 }
